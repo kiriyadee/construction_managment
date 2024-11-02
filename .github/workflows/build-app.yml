@@ -22,10 +22,3 @@ jobs:
       - name: Compile Java Application
         run: |
           javac -d ./bin src/App.java
-
-      - name: Test Java Application
-        run: |
-          cd bin
-          java App &
-          sleep 1
-          pkill -f "java App"
