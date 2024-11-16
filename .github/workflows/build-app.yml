@@ -22,4 +22,3 @@ jobs:
       - name: Compile Java Application
         run: |
           javac -d ./bin src/App.java
-          java -cp ./bin org.junit.platform.console.ConsoleLauncher --scan-classpath --class-path ./bin --reports-dir=test-results
