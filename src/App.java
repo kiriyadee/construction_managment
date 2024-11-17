@@ -1,36 +1,35 @@
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class App {
 
-    private static final String[][] CORRECT_CREDENTIALS = {{"admin", "admin123"}};
-    private static String[][] employees = new String[100][3]; // Array to store employee information
-    private static int employeeCount = 0; // Counter for the number of employees
+    private static final String[][] CORRECT_CREDENTIALS = {{"admin", "admin"}};
 
-    /**
-     * Authenticates user login with 3 attempts.
-     *
-     * @param scanner Scanner for user input
-     * @return true if login is successful, false otherwise
-     */
+    // Arrays to store project, supplier, purchase order, and employee data
+    private static final String[][] projects = new String[100][7];
+    private static final String[][] budgetData = new String[100][2];
+    private static final String[][] suppliers = new String[100][2];
+    private static final String[][] purchaseOrders = new String[100][1];
+    private static final String[][] employees = new String[100][3];
+    private static int projectCount = 0, supplierCount = 0, purchaseOrderCount = 0, employeeCount = 0;
+
     private static boolean authenticate(Scanner scanner) {
-        int attempts = 3;  // 3 login attempts
-
+        // Attempt to authenticate user with 3 attempts
+        int attempts = 3;
         while (attempts > 0) {
             System.out.println("\nLogin Authentication");
             System.out.print("Username: ");
             String username = scanner.nextLine();
-
             System.out.print("Password: ");
             String password = scanner.nextLine();
-
-            if (Arrays.stream(CORRECT_CREDENTIALS)
-                    .anyMatch(credentials -> username.equals(credentials[0]) && password.equals(credentials[1]))) {
-                System.out.println("Login successful!");
+            // Check if the entered credentials match any in CORRECT_CREDENTIALS
+            if (Arrays.stream(CORRECT_CREDENTIALS).anyMatch(credentials -> username.equals(credentials[0]) && password.equals(credentials[1]))) {
+                System.out.println("Login successful!\n");
                 return true;
             }
-
+            // Decrement attempts and display the remaining attempts if credentials are invalid
             attempts--;
             System.out.println("Invalid credentials. You have " + attempts + " attempts remaining.");
         }
@@ -39,47 +38,50 @@ public class App {
     }
 
     private static void displayMenu() {
-        // Displaying the main menu options
-        System.out.println("\nWelcome to the Construction Engineering ERP Software!");
+        System.out.print("");
+        System.out.print("-------------------------------------------------------------");
+        System.out.println("\n** Welcome to the Construction Engineering ERP Software! **\n");
+        System.out.println("+++ Please enter your choice. ++");
         System.out.println("1. Project Management");
-        System.out.println("2. Resource Management");
-        System.out.println("3. Procurement Management");
-        System.out.println("4. Financial Management");
-        System.out.println("5. Human Resource Management");
+        System.out.println("2. Supply Chain & Inventory Management");
+        System.out.println("3. Financial Management");
+        System.out.println("4. Human Resource Management");
+        System.out.println("5. Generate Report");
         System.out.println("6. Exit");
+        System.out.println("-------------------------------------------------------------");
         System.out.print("Enter your choice (1-6) or press Enter to return: ");
+        System.out.println("");
     }
 
     public static void main(String[] args) throws Exception {
         try (Scanner scanner = new Scanner(System.in)) {
-            // Authenticate user first
             if (!authenticate(scanner)) {
                 System.out.println("Authentication failed. Program terminating.");
                 return;
             }
-
             int choice = 0;
             do {
                 displayMenu();
-                String input = scanner.nextLine(); // Changed to directly read a line to handle Enter key press
-                if (input.isEmpty()) { // Check if Enter key was pressed
-                    continue; // Return to the current function without processing further
+                String input = scanner.nextLine();
+                if (input.isEmpty()) {
+                    continue;
                 }
-                choice = Integer.parseInt(input); // Parse the input to an integer
-
+                choice = Integer.parseInt(input);
                 switch (choice) {
                     case 1 ->
                         manageProject(scanner);
                     case 2 ->
-                        System.out.println("Resource management functionality is under development.");
+                        manageSupplyChainInventory(scanner);
                     case 3 ->
-                        manageProcurement(scanner);
+                        manageFinancialManagement(scanner);
                     case 4 ->
-                        System.out.println("Financial management functionality is under development.");
-                    case 5 ->
                         manageHumanResources(scanner);
-                    case 6 ->
+                    case 5 ->
+                        generateReport();
+                    case 6 -> {
                         System.out.println("Exiting program...");
+                        System.exit(0);
+                    }
                     default ->
                         System.out.println("Invalid choice! Please try again.");
                 }
@@ -88,153 +90,305 @@ public class App {
         displayMenu();
     }
 
-    /**
-     * Manages project operations such as comprehensive scheduling and task
-     * assignments.
-     *
-     * @param scanner Scanner object for user input
-     */
     private static void manageProject(Scanner scanner) {
-        // Displaying project management options
         System.out.println("\n=== 1. Project Management ===");
-        System.out.println("1. Comprehensive Scheduling");
-        System.out.println("2. Task Assignments");
-        System.out.print("Enter your choice (1-2): ");
-
+        System.out.println("(1) Add Project");
+        System.out.println("(2) List Projects");
+        System.out.println("(3) Update Project Status");
+        System.out.println("(0) Return to Main Menu");
+        System.out.print("Enter your choice (0-3): ");
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
-
+        scanner.nextLine();
         switch (choice) {
             case 1 -> {
-                // Handling comprehensive scheduling
-                System.out.println("\nComprehensive Scheduling:");
-                System.out.print("Enter project id: ");
-                String projectId = scanner.nextLine();
-                System.out.print("Enter project start date (YYYY-MM-DD): ");
-                String startDate = scanner.nextLine();
-                System.out.print("Enter project end date (YYYY-MM-DD): ");
-                String endDate = scanner.nextLine();
-
-                // Add code to save project schedule
-                System.out.println("Project schedule created successfully for project id " + projectId + "!");
+                addProject(scanner);
+                manageProject(scanner); // Return to this menu after successful operation
             }
             case 2 -> {
-                // Handling task assignments
-                System.out.println("\nTask Assignments:");
-                System.out.print("Enter task name: ");
-                String taskName = scanner.nextLine();
-                System.out.print("Enter task start date (YYYY-MM-DD): ");
-                String taskStartDate = scanner.nextLine();
-                System.out.print("Enter task end date (YYYY-MM-DD): ");
-                String taskEndDate = scanner.nextLine();
-                System.out.print("Enter task priority (High/Medium/Low): ");
-                String taskPriority = scanner.nextLine();
-                System.out.print("Enter team/individual name: ");
-                String teamName = scanner.nextLine();
-
-                // Add code to assign task
-                System.out.println("Task " + taskName + " assigned to " + teamName + " successfully!");
-            }
-            default ->
-                System.out.println("Invalid choice! Please try again.");
-        }
-    }
-
-    @SuppressWarnings("unused")
-    /**
-     * Manages procurement processes such as supplier and vendor database
-     * management, purchase order creation, and supply chain integration.
-     *
-     * @param scanner Scanner object for user input
-     */
-    private static void manageProcurement(Scanner scanner) {
-        System.out.println("\n=== 3. Procurement Management ===");
-        System.out.println("1. Supplier and Vendor Database");
-        System.out.println("2. Purchase Order Creation");
-        System.out.println("3. Supply Chain Integration");
-        System.out.print("Enter your choice (1-3): ");
-
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
-
-        switch (choice) {
-            case 1 -> {
-                System.out.println("\nSupplier and Vendor Database:");
-                // Add code to display supplier and vendor database
-                System.out.println("Supplier 1: XYZ Corporation");
-                System.out.println("Supplier 2: ABC Inc.");
-                System.out.println("Vendor 1: DEF Services");
-            }
-            case 2 -> {
-                System.out.println("\nPurchase Order Creation");
-                System.out.print("Enter purchase order details: ");
-                String details = scanner.nextLine();
-
-                // Add code to save purchase order
-                System.out.println("Purchase order created successfully!");
+                listProjects(scanner);
+                manageProject(scanner); // Return to this menu after successful operation
             }
             case 3 -> {
-                System.out.println("\nSupply Chain Integration");
-                System.out.print("Enter supplier name for integration: ");
-                String supplierName = scanner.nextLine();
+                updateProjectStatus(scanner);
+                manageProject(scanner); // Return to this menu after successful operation
+            }
+            case 0 -> {
+                return;
+            }
+            default -> {
+                System.out.println("Invalid choice! Please try again.");
+                manageProject(scanner); // Return to this menu after invalid operation
+            }
+        }
+    }
 
-                // Add code to integrate with supplier
-                System.out.println("Supply chain integration successful for " + supplierName + "!");
+    private static void addProject(Scanner scanner) {
+        System.out.println("\nAdd Project :");
+        System.out.print("Enter project name (OWNER_(PPA,EPC)_kWp): ");
+        projects[projectCount][0] = scanner.nextLine();
+        System.out.print("Enter project start date (YYYY-MM-DD): ");
+        projects[projectCount][1] = scanner.nextLine();
+        System.out.print("Enter project end date (YYYY-MM-DD): ");
+        projects[projectCount][2] = scanner.nextLine();
+        System.out.print("Enter project ID (0x): ");
+        projects[projectCount][3] = scanner.nextLine(); // Assuming project ID is stored in the 4th column
+        System.out.print("Enter project size in kWp: ");
+        double projectSize = scanner.nextDouble();
+        scanner.nextLine(); // Consume newline left-over
+        int costPerWatt = 5; // Assuming cost per watt is 5 Thai baht
+        int projectCost = (int) ((projectSize * 1000) * costPerWatt); // Project cost multiplied by 10
+        projectCost *= 10; // Project cost increased by 20%
+        int vat = (int) (projectCost * 0.07); // 7% VAT
+        projectCost += vat; // Include VAT in project cost
+        projects[projectCount][4] = String.valueOf(projectCost);
+        projectCount++;
+        System.out.println("\n** Project : " + projects[projectCount - 1][0] + " | Project ID: " + projects[projectCount - 1][3] + " | , added successfully!");
+    }
+
+    private static void listProjects(Scanner scanner) {
+        if (projectCount == 0) {
+            System.out.println("\nNo projects found.");
+            manageProject(scanner);
+        }
+        System.out.println("\n++ Projects Record : ++");
+        for (int i = 0; i < projectCount; i++) {
+            System.out.println("No. (" + (i + 1) + ") Project Name: " + projects[i][0] + " | Project ID: " + projects[i][3] + ", Start Date: " + projects[i][1]
+                    + ", End Date: " + projects[i][2] + ", Project Cost: " + String.format("%,d", Integer.parseInt(projects[i][4])) + " THB, Status: " + projects[i][6]);
+        }
+    }
+
+    private static void updateProjectStatus(Scanner scanner) {
+        if (projectCount == 0) {
+            System.out.println("\nNo projects available for status update.");
+            manageProject(scanner);
+        } else {
+            System.out.println("\nUpdate Project Status :");
+            System.out.println("Select Project :");
+            for (int i = 0; i < projectCount; i++) {
+                System.out.println((i + 1) + ". ID: " + projects[i][3] + ", Project Name: "
+                        + projects[i][0]);
+            }
+            System.out.print("Enter project ID: ");
+            int projectId = scanner.nextInt();
+            scanner.nextLine(); // Consume newline left-over
+            System.out.print("Enter new project status (e.g., 'Bidding', 'In Progress', 'Completed'): ");
+            String updateStatus = scanner.nextLine();
+            boolean projectStatusUpdated = false;
+            for (int i = 0; i < projectCount; i++) {
+                if (Integer.parseInt(projects[i][3]) == projectId) {
+                    projects[i][6] = updateStatus; // Add projectStatus to project data array
+                    projectStatusUpdated = true;
+                    break;
+                }
+            }
+            if (projectStatusUpdated) {
+                System.out.println("\nProject status updated successfully!");
+            } else {
+                System.out.println("\nProject not found or ID mismatch. Status update failed.");
+            }
+        }
+    }
+
+    /**
+     * Manages financial operations such as budgeting and cost control.
+     *
+     * @param scanner The scanner object to read user input.
+     */
+    private static void manageFinancialManagement(Scanner scanner) {
+        System.out.println("\n=== 3. Financial Management ===");
+        System.out.println("1. Budgeting");
+        System.out.println("2. Cost Control");
+        System.out.println("3. List Projects with Budget");
+        System.out.print("Enter your choice (1-3): ");
+        int choice;
+        // Attempt to read an integer from the user input
+        try {
+            choice = scanner.nextInt();
+            // Consume the newline character left in the buffer after reading an integer
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            // If the input is not an integer, print an error message and exit the method
+            System.out.println("Invalid input! Please try again.");
+            return;
+        }
+        switch (choice) {
+            case 1 ->
+                setBudget(scanner);
+            case 2 ->
+                controlCosts(scanner);
+            case 3 -> {
+                System.out.println("\nList of Projects with Budget:");
+                for (int i = 0; i < projectCount; i++) {
+                    System.out.println("Project ID: " + projects[i][3] + ", Project Name: "
+                            + projects[i][0] + ", Budget: " + String.format("%,d", Integer.parseInt(budgetData[i][0])));
+                }
             }
             default ->
                 System.out.println("Invalid choice! Please try again.");
         }
     }
 
-    /**
-     * Manages employee data, including recording and displaying employee
-     * information.
-     *
-     * @param scanner Scanner object for user input
-     */
+    private static void setBudget(Scanner scanner) {
+        System.out.println("\nBudgeting:");
+        System.out.println("List of Projects:");
+        for (int i = 0; i < projectCount; i++) {
+            double projectCost = Double.parseDouble(projects[i][4]);
+            int newBudget = (int) (projectCost * 0.6);
+            budgetData[i][0] = String.valueOf(newBudget); // Auto-add budget with 60% of project cost
+            System.out.println((i + 1) + ". Project ID: " + projects[i][3] + ", Project Name: "
+                    + projects[i][0] + ", Budget: " + String.format("%,d", Integer.parseInt(budgetData[i][0])) + " THB");
+        }
+        System.out.print("Enter project ID to update budget: ");
+        int projectId = scanner.nextInt();
+        scanner.nextLine(); // Consume newline left-over
+        boolean projectFound = false;
+        for (int i = 0; i < projectCount; i++) {
+            if (Integer.parseInt(projects[i][3]) == projectId) {
+                // Calculate the budget at 60% of the project cost
+                double projectCost = Double.parseDouble(projects[i][4]);
+                double newBudget = projectCost * 0.6;
+                budgetData[i][0] = String.valueOf(newBudget); // Update budget in budget data array
+                projectFound = true;
+                System.out.println("\nBudget updated successfully for project ID " + projectId + "!");
+                break;
+            }
+        }
+        if (!projectFound) {
+            System.out.println("\nProject not found. Please try again.");
+        }
+    }
+
+    // คำนวนที่ 80% ของ project cost
+    private static void controlCosts(Scanner scanner) {
+        System.out.println("\nCost Control:");
+        System.out.print("Enter project name: ");
+        String projectForCostControl = scanner.nextLine();
+        System.out.print("Enter cost amount: ");
+        String costAmount = scanner.nextLine();
+        System.out.println("Cost control implemented successfully for project "
+                + projectForCostControl + "!");
+    }
+
+    private static void manageSupplyChainInventory(Scanner scanner) {
+        System.out.println("\n=== 2. Supply Chain, Inventory Management ===");
+        System.out.println("1. Source Solar Panels");
+        System.out.println("2. Source Inverters");
+        System.out.println("3. Source Other Components");
+        System.out.println("4. Manage Inventory");
+        System.out.print("Enter your choice (1-4): ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        switch (choice) {
+            case 1 ->
+                sourceSolarPanels(scanner);
+            case 2 ->
+                sourceInverters(scanner);
+            case 3 ->
+                sourceOtherComponents(scanner);
+            case 4 ->
+                manageInventory();
+            default ->
+                System.out.println("Invalid choice! Please try again.");
+        }
+    }
+
+    private static void sourceSolarPanels(Scanner scanner) {
+        System.out.println("\nSource Solar Panels:");
+        System.out.println("Select supplier name for solar panels: ");
+
+        String[] manufatureCompany = {"LONGi", "ZNSHINE"};
+
+        for (int i = 0; i < manufatureCompany.length; i++) {
+            System.out.println((i + 1) + ". " + manufatureCompany[i]);
+        }
+        System.out.print("Enter your choice (1-" + manufatureCompany.length + "): ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        if (choice > 0 && choice <= manufatureCompany.length) {
+            System.out.println("Solar panels sourced successfully from "
+                    + manufatureCompany[choice - 1] + "!");
+        } else {
+            System.out.println("Invalid choice! Please try again.");
+        }
+    }
+
+    private static void sourceInverters(Scanner scanner) {
+        System.out.println("\nSource Inverters:");
+        System.out.print("Enter supplier name for inverters: ");
+        String inverterSupplierName = scanner.nextLine();
+        System.out.println("Inverters sourced successfully from " + inverterSupplierName + "!");
+    }
+
+    private static void sourceOtherComponents(Scanner scanner) {
+        System.out.println("\nSource Other Components:");
+        System.out.print("Enter supplier name for other components: ");
+        String otherComponentsSupplierName = scanner.nextLine();
+        System.out.println("Other components sourced successfully from " + otherComponentsSupplierName + "!");
+    }
+
+    private static void manageInventory() {
+        System.out.println("\nManage Inventory:");
+        System.out.println("Inventory management functionality is under development.");
+    }
+
     private static void manageHumanResources(Scanner scanner) {
         String[] options = {"Record Employee Information", "Show Employees Information"};
         String[] employeeInfo = new String[3];
-
         System.out.println("\n=== 5. Human Resource Management ===");
         for (int i = 0; i < options.length; i++) {
             System.out.println((i + 1) + ". " + options[i]);
         }
         System.out.print("Enter your choice (1-" + options.length + "): ");
-
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
-
+        scanner.nextLine();
         switch (choice) {
-            case 1 -> {
-                System.out.println("\nRecord Employee Information:");
-                System.out.print("Enter employee ID: ");
-                employeeInfo[0] = scanner.nextLine();
-                System.out.print("Enter employee name: ");
-                employeeInfo[1] = scanner.nextLine();
-                System.out.print("Enter employee role: ");
-                employeeInfo[2] = scanner.nextLine();
-
-                // Save employee information to the array
-                for (int i = 0; i < employees.length; i++) {
-                    if (employees[i][0] == null) {
-                        employees[i] = employeeInfo;
-                        employeeCount++; // Increment the employee count
-                        break;
-                    }
-                }
-
-                System.out.println("Employee information saved successfully for " + employeeInfo[1] + "!");
-            }
-            case 2 -> {
-                System.out.println("\nShow Employees Information:");
-                for (int i = 0; i < employeeCount; i++) {
-                    System.out.println("Employee ID: " + employees[i][0] + ", Name: " + employees[i][1] + ", Role: " + employees[i][2]);
-                }
-            }
-            default -> {
+            case 1 ->
+                recordEmployeeInformation(scanner, employeeInfo);
+            case 2 ->
+                showEmployeesInformation();
+            default ->
                 System.out.println("Invalid choice! Please try again.");
-            }
         }
+    }
+
+    private static void recordEmployeeInformation(Scanner scanner, String[] employeeInfo) {
+        System.out.println("\nRecord Employee Information:");
+        System.out.print("Enter employee ID: ");
+        employeeInfo[0] = scanner.nextLine();
+        System.out.print("Enter employee name: ");
+        employeeInfo[1] = scanner.nextLine();
+        System.out.print("Enter employee role: ");
+        employeeInfo[2] = scanner.nextLine();
+        employees[employeeCount] = employeeInfo;
+        employeeCount++;
+        System.out.println("Employee information saved successfully for " + employeeInfo[1] + "!");
+    }
+
+    private static void showEmployeesInformation() {
+        System.out.println("\nShow Employees Information:");
+        for (int i = 0; i < employeeCount; i++) {
+            System.out.println("Employee ID: " + employees[i][0] + ", Name: " + employees[i][1] + ", Role: " + employees[i][2]);
+        }
+    }
+
+    private static void generateReport() {
+        System.out.println("*** ---------------------- ***");
+        System.out.println("=== Project Report ===");
+        for (int i = 0; i < projectCount; i++) {
+            System.out.println("Project Name: " + projects[i][0] + ", Start Date: " + projects[i][1] + ", End Date: " + projects[i][2] + ", Status: " + projects[i][3]);
+        }
+        System.out.println("=== Budget Report ===");
+        for (int i = 0; i < projectCount; i++) {
+            System.out.println("Project ID: " + projects[i][3] + ", Project Name: " + projects[i][0] + ", Budget: " + String.format("%,d", Integer.parseInt(budgetData[i][0])));
+        }
+        System.out.println("=== Supplier Report ===");
+        for (int i = 0; i < supplierCount; i++) {
+            System.out.println("Supplier/Vendor ID: " + suppliers[i][0] + ", Name: " + suppliers[i][1]);
+        }
+        System.out.println("=== Employee Report ===");
+        for (int i = 0; i < employeeCount; i++) {
+            System.out.println("Employee ID: " + employees[i][0] + ", Name: " + employees[i][1] + ", Role: " + employees[i][2]);
+        }
+        System.out.println("*** ---------------------- ***");
     }
 }
