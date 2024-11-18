@@ -10,6 +10,13 @@ public class App {
     // Arrays to store project, supplier, purchase order, and employee data
     private static final String[][] projects = new String[100][7];
     private static final String[][] budgetData = new String[100][2];
+
+    // static {
+    //     for (int i = 0; i < budgetData.length; i++) {
+    //         budgetData[i][0] = "0";
+    //         budgetData[i][1] = "0";
+    //     }
+    // }
     private static final String[][] suppliers = new String[100][2];
     private static final String[][] purchaseOrders = new String[100][1];
     private static final String[][] employees = new String[100][3];
@@ -40,8 +47,8 @@ public class App {
     private static void displayMenu() {
         System.out.print("");
         System.out.print("-------------------------------------------------------------");
-        System.out.println("\n** Welcome to the Construction Engineering ERP Software! **\n");
-        System.out.println("+++ Please enter your choice. ++");
+        System.out.println("\n【 Welcome to the Construction Engineering ERP Software! 】\n");
+        System.out.println("⌘ Please enter your choice. ⌘");
         System.out.println("1. Project Management");
         System.out.println("2. Supply Chain & Inventory Management");
         System.out.println("3. Financial Management");
@@ -147,25 +154,25 @@ public class App {
 
     private static void listProjects(Scanner scanner) {
         if (projectCount == 0) {
-            System.out.println("\nNo projects found.");
+            System.out.println("\n➜ No projects found.");
             manageProject(scanner);
         }
         System.out.println("\n++ Projects Record : ++");
         for (int i = 0; i < projectCount; i++) {
-            System.out.println("No. (" + (i + 1) + ") Project Name: " + projects[i][0] + " | Project ID: " + projects[i][3] + ", Start Date: " + projects[i][1]
+            System.out.println("No." + (i + 1) + " Project Name: " + projects[i][0] + " | Project ID: " + projects[i][3] + ", Start Date: " + projects[i][1]
                     + ", End Date: " + projects[i][2] + ", Project Cost: " + String.format("%,d", Integer.parseInt(projects[i][4])) + " THB, Status: " + projects[i][6]);
         }
     }
 
     private static void updateProjectStatus(Scanner scanner) {
         if (projectCount == 0) {
-            System.out.println("\nNo projects available for status update.");
+            System.out.println("\n➜ No projects available for status update.");
             manageProject(scanner);
         } else {
             System.out.println("\nUpdate Project Status :");
             System.out.println("Select Project :");
             for (int i = 0; i < projectCount; i++) {
-                System.out.println((i + 1) + ". ID: " + projects[i][3] + ", Project Name: "
+                System.out.println((i + 1) + ") Project ID: " + projects[i][3] + ", Project Name: "
                         + projects[i][0]);
             }
             System.out.print("Enter project ID: ");
@@ -217,11 +224,7 @@ public class App {
             case 2 ->
                 controlCosts(scanner);
             case 3 -> {
-                System.out.println("\nList of Projects with Budget:");
-                for (int i = 0; i < projectCount; i++) {
-                    System.out.println("Project ID: " + projects[i][3] + ", Project Name: "
-                            + projects[i][0] + ", Budget: " + String.format("%,d", Integer.parseInt(budgetData[i][0])));
-                }
+                listProjectsWithBudget();
             }
             default ->
                 System.out.println("Invalid choice! Please try again.");
@@ -258,17 +261,48 @@ public class App {
         }
     }
 
-    // คำนวนที่ 80% ของ project cost
+    // Calculate cost control at 80% of project cost
     private static void controlCosts(Scanner scanner) {
         System.out.println("\nCost Control:");
-        System.out.print("Enter project name: ");
-        String projectForCostControl = scanner.nextLine();
-        System.out.print("Enter cost amount: ");
-        String costAmount = scanner.nextLine();
-        System.out.println("Cost control implemented successfully for project "
-                + projectForCostControl + "!");
+        System.out.print("Enter project ID: ");
+        int projectId = scanner.nextInt();
+        scanner.nextLine(); // Consume newline left-over
+        boolean projectFound = false;
+        for (int i = 0; i < projectCount; i++) {
+            if (Integer.parseInt(projects[i][3]) == projectId) {
+                double projectCost = Double.parseDouble(projects[i][4]);
+                double costControl = projectCost * 0.8;
+                budgetData[i][1] = String.valueOf(costControl); // Update cost control in budget data array
+                projectFound = true;
+                System.out.println("Cost control implemented successfully for project ID " + projectId + " (" + projects[i][0] + ") at 80% of project cost: " + String.format("%,.2f", costControl) + " THB");
+                break;
+            }
+        }
+        if (!projectFound) {
+            System.out.println("➜ Project not found. Please try again.");
+        }
     }
 
+    private static void listProjectsWithBudget() {
+        boolean projectFound = false;
+        System.out.println("\nList of Projects with Budget: ");
+        if (!projectFound) {
+            System.out.println("➜ Project not found. Please try again.");
+        }
+        for (int i = 0; i < projectCount; i++) {
+            if (budgetData[i][0] != null) {
+                System.out.println("Project ID: " + projects[i][3] + ", Project Name: "
+                        + projects[i][0] + ", Budget: " + String.format("%,.2f", Double.parseDouble(budgetData[i][0])) + " THB");
+            } else {
+                System.out.println("Project ID: " + projects[i][3] + ", Project Name: "
+                        + projects[i][0] + ", Budget: N/A");
+            }
+        }
+    }
+
+    /**
+     * @param scanner
+     */
     private static void manageSupplyChainInventory(Scanner scanner) {
         System.out.println("\n=== 2. Supply Chain, Inventory Management ===");
         System.out.println("1. Source Solar Panels");
@@ -282,7 +316,7 @@ public class App {
             case 1 ->
                 sourceSolarPanels(scanner);
             case 2 ->
-                sourceInverters(scanner);
+                sourceInverters();
             case 3 ->
                 sourceOtherComponents(scanner);
             case 4 ->
@@ -296,27 +330,30 @@ public class App {
         System.out.println("\nSource Solar Panels:");
         System.out.println("Select supplier name for solar panels: ");
 
-        String[] manufatureCompany = {"LONGi", "ZNSHINE"};
+        String[] manufatureSolarPanel = {"LONGi", "ZNSHINE"};
 
-        for (int i = 0; i < manufatureCompany.length; i++) {
-            System.out.println((i + 1) + ". " + manufatureCompany[i]);
+        for (int i = 0; i < manufatureSolarPanel.length; i++) {
+            System.out.println((i + 1) + ". " + manufatureSolarPanel[i]);
         }
-        System.out.print("Enter your choice (1-" + manufatureCompany.length + "): ");
+        System.out.print("Enter your choice (1-" + manufatureSolarPanel.length + "): ");
         int choice = scanner.nextInt();
         scanner.nextLine();
-        if (choice > 0 && choice <= manufatureCompany.length) {
+        if (choice > 0 && choice <= manufatureSolarPanel.length) {
             System.out.println("Solar panels sourced successfully from "
-                    + manufatureCompany[choice - 1] + "!");
+                    + manufatureSolarPanel[choice - 1] + "!");
         } else {
             System.out.println("Invalid choice! Please try again.");
         }
     }
 
-    private static void sourceInverters(Scanner scanner) {
+    private static void sourceInverters() {
         System.out.println("\nSource Inverters:");
-        System.out.print("Enter supplier name for inverters: ");
-        String inverterSupplierName = scanner.nextLine();
-        System.out.println("Inverters sourced successfully from " + inverterSupplierName + "!");
+
+        String[] inverterBrand = {"SMA", "Huawei", "Growatt"};
+        System.out.println("Available inverter brands:");
+        for (int i = 0; i < inverterBrand.length; i++) {
+            System.out.println((i + 1) + "." + inverterBrand[i]);
+        }
     }
 
     private static void sourceOtherComponents(Scanner scanner) {
@@ -327,8 +364,29 @@ public class App {
     }
 
     private static void manageInventory() {
+
         System.out.println("\nManage Inventory:");
-        System.out.println("Inventory management functionality is under development.");
+
+        System.out.println("\nAvailable Inventory:");
+        System.out.println("Inverter Brands:");
+        String[] inverterBrands = {"SMA", "Huawei", "Growatt"};
+        for (String brand : inverterBrands) {
+            System.out.println("- " + brand);
+        }
+
+        System.out.println("\nSolar Panel Manufacturers:");
+        String[] solarPanelManufacturers = {"LONGi", "ZNSHINE"};
+        for (String manufacturer : solarPanelManufacturers) {
+            System.out.println("- " + manufacturer);
+        }
+
+        System.out.println("\nOther Components:");
+        String[] otherComponents = {"Mounting Structures", "Cables", "Connectors"};
+        for (String component : otherComponents) {
+            System.out.println("- " + component);
+        }
+
+        // System.out.println("Inventory management functionality is under development."); sehfy4-nopSor-zujdyc
     }
 
     private static void manageHumanResources(Scanner scanner) {
@@ -379,7 +437,10 @@ public class App {
         }
         System.out.println("=== Budget Report ===");
         for (int i = 0; i < projectCount; i++) {
-            System.out.println("Project ID: " + projects[i][3] + ", Project Name: " + projects[i][0] + ", Budget: " + String.format("%,d", Integer.parseInt(budgetData[i][0])));
+            double projectCost = Double.parseDouble(projects[i][4]);
+            int newBudget = (int) (projectCost * 0.6);
+            budgetData[i][0] = String.valueOf(newBudget); // Auto-add budget with 60% of project cost
+            System.out.println("Project ID: " + projects[i][3] + ", Project Name: " + projects[i][0] + ", Budget: " + String.format("%,d", Integer.parseInt(budgetData[i][0])) + " THB");
         }
         System.out.println("=== Supplier Report ===");
         for (int i = 0; i < supplierCount; i++) {
