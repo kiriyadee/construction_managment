@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class App {
 
     private static final String[][] CORRECT_CREDENTIALS = {
-        { "admin", "admin" },
+        { "admin", "admin" }
     };
 
     // Arrays to store project, supplier, purchase order, and employee data
@@ -14,6 +14,12 @@ public class App {
     private static final String[][] employees = new String[100][3];
     private static int projectCount = 0, employeeCount = 0;
 
+    /**
+     * Authenticates the user with 3 attempts.
+     *
+     * @param scanner The scanner object to read user input.
+     * @return true if login is successful, false if login fails.
+     */
     private static boolean authenticate(Scanner scanner) {
         // Attempt to authenticate user with 3 attempts
         int attempts = 3;
@@ -46,6 +52,9 @@ public class App {
         return false;
     }
 
+    /**
+     * Displays the main menu of the ERP software.
+     */
     private static void displayMenu() {
         System.out.print("");
         System.out.print(
@@ -100,9 +109,15 @@ public class App {
                 }
             } while (choice != 6);
         }
+        // Display the menu one more time after exiting the loop
         displayMenu();
     }
 
+    /**
+     * Manages projects.
+     *
+     * @param scanner The scanner object to read user input.
+     */
     private static void manageProject(Scanner scanner) {
         System.out.println("\n=== 1. Project Management ===");
         System.out.println("(1) Add Project");
@@ -135,32 +150,44 @@ public class App {
         }
     }
 
+    /**
+     * Adds a new project.
+     * <p>
+     * Prompts the user to input the project name, start date, end date, project ID, and project size in kWp.
+     * Calculates the project cost by multiplying the project size by the cost per watt of 5 Thai Baht.
+     * Increases the project cost by 20% and adds 7% VAT.
+     * Stores the project information in the projects array and increments the project count.
+     * Prints a success message after adding the project successfully.
+     *
+     * @param scanner The scanner object to read user input.
+     */
     private static void addProject(Scanner scanner) {
-        System.out.println("\nAdd Project :");
         System.out.print("Enter project name (OWNER_(PPA,EPC)_kWp): ");
-        projects[projectCount][0] = scanner.nextLine();
+        String projectName = scanner.nextLine();
         System.out.print("Enter project start date (YYYY-MM-DD): ");
-        projects[projectCount][1] = scanner.nextLine();
+        String startDate = scanner.nextLine();
         System.out.print("Enter project end date (YYYY-MM-DD): ");
-        projects[projectCount][2] = scanner.nextLine();
+        String endDate = scanner.nextLine();
         System.out.print("Enter project ID (0x): ");
-        projects[projectCount][3] = scanner.nextLine(); // Assuming project ID is stored in the 4th column
+        String projectId = scanner.nextLine();
         System.out.print("Enter project size in kWp: ");
         double projectSize = scanner.nextDouble();
         scanner.nextLine(); // Consume newline left-over
+
         int costPerWatt = 5; // Assuming cost per watt is 5 Thai baht
-        int projectCost = (int) ((projectSize * 1000) * costPerWatt); // Project cost multiplied by 10
-        projectCost *= 10; // Project cost increased by 20%
+        int projectCost = (int) (projectSize * costPerWatt * 1000);
+        projectCost = (int) (projectCost * 1.2); // Increased by 20%
         int vat = (int) (projectCost * 0.07); // 7% VAT
         projectCost += vat; // Include VAT in project cost
+
+        projects[projectCount][0] = projectName;
+        projects[projectCount][1] = startDate;
+        projects[projectCount][2] = endDate;
+        projects[projectCount][3] = projectId;
         projects[projectCount][4] = String.valueOf(projectCost);
         projectCount++;
         System.out.println(
-            "\n** Project : " +
-            projects[projectCount - 1][0] +
-            " | Project ID: " +
-            projects[projectCount - 1][3] +
-            " | , added successfully!"
+            "\n** Project : " + projectName + " | Project ID: " + projectId + " | , added successfully!"
         );
     }
 
@@ -457,9 +484,7 @@ public class App {
         System.out.println("\nOther Components:");
         String[] otherComponents = {
             "Mounting Structures",
-            "Cables",
-            "Connectors",
-        };
+"Cables","Connectors",        };
         for (String component : otherComponents) {
             System.out.println("- " + component);
         }
