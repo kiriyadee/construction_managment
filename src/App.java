@@ -94,18 +94,28 @@ public class App {
                 }
                 choice = Integer.parseInt(input);
                 switch (choice) {
-                    case 1 -> manageProject(scanner);
-                    case 2 -> manageSupplyChainInventory(scanner);
-                    case 3 -> manageFinancialManagement(scanner);
-                    case 4 -> manageHumanResources(scanner);
-                    case 5 -> generateReport();
-                    case 6 -> {
+                    case 1:
+                        manageProject(scanner);
+                        break;
+                    case 2:
+                        manageSupplyChainInventory(scanner);
+                        break;
+                    case 3:
+                        manageFinancialManagement(scanner);
+                        break;
+                    case 4:
+                        manageHumanResources(scanner);
+                        break;
+                    case 5:
+                        generateReport();
+                        break;
+                    case 6:
                         System.out.println("Exiting program...");
                         System.exit(0);
-                    }
-                    default -> System.out.println(
-                        "Invalid choice! Please try again."
-                    );
+                        break;
+                    default:
+                        System.out.println("Invalid choice! Please try again.");
+                        break;
                 }
             } while (choice != 6);
         }
@@ -128,25 +138,24 @@ public class App {
         int choice = scanner.nextInt();
         scanner.nextLine();
         switch (choice) {
-            case 1 -> {
+            case 1:
                 addProject(scanner);
                 manageProject(scanner); // Return to this menu after successful operation
-            }
-            case 2 -> {
+                break;
+            case 2:
                 listProjects(scanner);
                 manageProject(scanner); // Return to this menu after successful operation
-            }
-            case 3 -> {
+                break;
+            case 3:
                 updateProjectStatus(scanner);
                 manageProject(scanner); // Return to this menu after successful operation
-            }
-            case 0 -> {
+                break;
+            case 0:
                 return;
-            }
-            default -> {
+            default:
                 System.out.println("Invalid choice! Please try again.");
                 manageProject(scanner); // Return to this menu after invalid operation
-            }
+                break;
         }
     }
 
@@ -282,15 +291,20 @@ public class App {
             return;
         }
         switch (choice) {
-            case 1 -> setBudget(scanner);
-            case 2 -> controlCosts(scanner);
-            case 3 -> {
+            case 1:
+                setBudget(scanner);
+                break;
+            case 2:
+                controlCosts(scanner);
+                break;
+            case 3:
                 listProjectsWithBudget();
-            }
-            case 0 -> {
+                break;
+            case 0:
                 return;
-            }
-            default -> System.out.println("Invalid choice! Please try again.");
+            default:
+                System.out.println("Invalid choice! Please try again.");
+                break;
         }
     }
 
@@ -411,11 +425,21 @@ public class App {
         int choice = scanner.nextInt();
         scanner.nextLine();
         switch (choice) {
-            case 1 -> sourceSolarPanels(scanner);
-            case 2 -> sourceInverters();
-            case 3 -> sourceOtherComponents(scanner);
-            case 4 -> manageInventory();
-            default -> System.out.println("Invalid choice! Please try again.");
+            case 1:
+                sourceSolarPanels(scanner);
+                break;
+            case 2:
+                sourceInverters();
+                break;
+            case 3:
+                sourceOtherComponents(scanner);
+                break;
+            case 4:
+                manageInventory();
+                break;
+            default:
+                System.out.println("Invalid choice! Please try again.");
+                break;
         }
     }
 
@@ -505,9 +529,15 @@ public class App {
         int choice = scanner.nextInt();
         scanner.nextLine();
         switch (choice) {
-            case 1 -> recordEmployeeInformation(scanner, employeeInfo);
-            case 2 -> showEmployeesInformation();
-            default -> System.out.println("Invalid choice! Please try again.");
+            case 1:
+                recordEmployeeInformation(scanner, employeeInfo);
+                break;
+            case 2:
+                showEmployeesInformation();
+                break;
+            default:
+                System.out.println("Invalid choice! Please try again.");
+                break;
         }
     }
 
