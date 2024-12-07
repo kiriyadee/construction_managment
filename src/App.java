@@ -417,26 +417,28 @@ public class App {
      */
     private static void manageSupplyChainInventory(Scanner scanner) {
         System.out.println("\n=== 2. Supply Chain, Inventory Management ===");
-        System.out.println("1. Source Solar Panels");
-        System.out.println("2. Source Inverters");
-        System.out.println("3. Source Other Components");
-        System.out.println("4. Manage Inventory");
-        System.out.print("Enter your choice (1-4): ");
+        System.out.println("(1) Source Solar Panels");
+        System.out.println("(2) Source Inverters");
+        System.out.println("(3) Manage Inventory");
+        System.out.println("(0) Return to Main Menu");
+        System.out.print("Enter your choice (0-3): ");
         int choice = scanner.nextInt();
         scanner.nextLine();
         switch (choice) {
             case 1:
                 sourceSolarPanels(scanner);
+                manageSupplyChainInventory(scanner); // Return to this menu after successful operation
                 break;
             case 2:
                 sourceInverters();
+                manageSupplyChainInventory(scanner); // Return to this menu after successful operation
                 break;
             case 3:
-                sourceOtherComponents(scanner);
-                break;
-            case 4:
                 manageInventory();
+                manageSupplyChainInventory(scanner); // Return to this menu after successful operation
                 break;
+            case 0:
+                return;
             default:
                 System.out.println("Invalid choice! Please try again.");
                 break;
@@ -478,50 +480,33 @@ public class App {
         }
     }
 
-    private static void sourceOtherComponents(Scanner scanner) {
-        System.out.println("\nSource Other Components:");
-        System.out.print("Enter supplier name for other components: ");
-        String otherComponentsSupplierName = scanner.nextLine();
-        System.out.println(
-            "Other components sourced successfully from " +
-            otherComponentsSupplierName +
-            "!"
-        );
-    }
-
     private static void manageInventory() {
         System.out.println("\nManage Inventory:");
 
         System.out.println("\nAvailable Inventory:");
         System.out.println("Inverter Brands:");
         String[] inverterBrands = { "SMA", "Huawei", "Growatt" };
-        for (String brand : inverterBrands) {
-            System.out.println("- " + brand);
+        int[] inverterStock = { 15, 20, 10 }; // Stock numbers for each inverter brand
+        for (int i = 0; i < inverterBrands.length; i++) {
+            System.out.println("- " + inverterBrands[i] + " (Stock: " + inverterStock[i] + " units)");
         }
 
         System.out.println("\nSolar Panel Manufacturers:");
         String[] solarPanelManufacturers = { "LONGi", "ZNSHINE" };
-        for (String manufacturer : solarPanelManufacturers) {
-            System.out.println("- " + manufacturer);
+        int[] solarPanelStock = { 100, 75 }; // Stock numbers for each manufacturer
+        for (int i = 0; i < solarPanelManufacturers.length; i++) {
+            System.out.println("- " + solarPanelManufacturers[i] + " (Stock: " + solarPanelStock[i] + " units)");
         }
-
-        System.out.println("\nOther Components:");
-        String[] otherComponents = {
-            "Mounting Structures",
-"Cables","Connectors",        };
-        for (String component : otherComponents) {
-            System.out.println("- " + component);
-        }
-        // System.out.println("Inventory management functionality is under development."); sehfy4-nopSor-zujdyc
     }
 
     private static void manageHumanResources(Scanner scanner) {
         String[] options = {
             "Record Employee Information",
             "Show Employees Information",
+            "Return to Main Menu"
         };
         String[] employeeInfo = new String[3];
-        System.out.println("\n=== 5. Human Resource Management ===");
+        System.out.println("\n=== 4. Human Resource Management ===");
         for (int i = 0; i < options.length; i++) {
             System.out.println((i + 1) + ". " + options[i]);
         }
@@ -531,9 +516,11 @@ public class App {
         switch (choice) {
             case 1:
                 recordEmployeeInformation(scanner, employeeInfo);
+                manageHumanResources(scanner);
                 break;
             case 2:
                 showEmployeesInformation();
+                manageHumanResources(scanner);
                 break;
             default:
                 System.out.println("Invalid choice! Please try again.");
@@ -617,10 +604,6 @@ public class App {
         System.out.println(
             "Solar Panel Manufacturers: " +
             String.join(", ", "LONGi", "ZNSHINE")
-        );
-        System.out.println(
-            "Other Components: " +
-            String.join(", ", "Mounting Structures", "Cables", "Connectors")
         );
 
         System.out.println("");
