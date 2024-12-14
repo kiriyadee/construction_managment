@@ -2,6 +2,13 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Main class for the Construction Engineering ERP Software.
+ * 
+ * Handles user authentication, main menu navigation, and various operations
+ * for project management, supply chain and inventory management, financial
+ * management, human resource management, and report generation.
+ */
 public class App {
 
     private static final String[][] CORRECT_CREDENTIALS = {
@@ -16,7 +23,7 @@ public class App {
 
     /**
      * Authenticates the user with 3 attempts.
-     *
+     * 
      * @param scanner The scanner object to read user input.
      * @return true if login is successful, false if login fails.
      */
@@ -53,7 +60,15 @@ public class App {
     }
 
     /**
-     * Displays the main menu of the ERP software.
+     * Displays the main menu of the Construction Engineering ERP Software.
+     * 
+     * Shows a menu with options for:
+     * 1. Project Management
+     * 2. Supply Chain & Inventory Management
+     * 3. Financial Management
+     * 4. Human Resource Management
+     * 5. Generate Report
+     * 6. Exit
      */
     private static void displayMenu() {
         System.out.print("");
@@ -77,6 +92,15 @@ public class App {
         System.out.println("");
     }
 
+    /**
+     * Main entry point of the application.
+     * 
+     * Handles user authentication and main menu navigation.
+     * Continues to display menu and process user choices until exit is selected.
+     * 
+     * @param args Command line arguments (not used)
+     * @throws Exception If an error occurs during program execution
+     */
     public static void main(String[] args) throws Exception {
         try (Scanner scanner = new Scanner(System.in)) {
             if (!authenticate(scanner)) {
@@ -124,9 +148,15 @@ public class App {
     }
 
     /**
-     * Manages projects.
-     *
-     * @param scanner The scanner object to read user input.
+     * Manages project-related operations.
+     * 
+     * Provides a submenu for:
+     * 1. Adding new projects
+     * 2. Listing existing projects
+     * 3. Updating project status
+     * 0. Returning to main menu
+     * 
+     * @param scanner The scanner object to read user input
      */
     private static void manageProject(Scanner scanner) {
         System.out.println("\n=== 1. Project Management ===");
@@ -167,8 +197,8 @@ public class App {
      * Increases the project cost by 20% and adds 7% VAT.
      * Stores the project information in the projects array and increments the project count.
      * Prints a success message after adding the project successfully.
-     *
-     * @param scanner The scanner object to read user input.
+     * 
+     * @param scanner The scanner object to read user input
      */
     private static void addProject(Scanner scanner) {
         System.out.print("Enter project name (OWNER_(PPA,EPC)_kWp): ");
@@ -200,6 +230,20 @@ public class App {
         );
     }
 
+    /**
+     * Lists all registered projects with their details.
+     * 
+     * Displays project information including:
+     * - Project number
+     * - Project name
+     * - Project ID
+     * - Start date
+     * - End date
+     * - Project cost
+     * - Current status
+     * 
+     * @param scanner The scanner object to read user input
+     */
     private static void listProjects(Scanner scanner) {
         if (projectCount == 0) {
             System.out.println("\n➜ No projects found.");
@@ -226,6 +270,17 @@ public class App {
         }
     }
 
+    /**
+     * Updates the status of an existing project.
+     * 
+     * Allows updating project status to values such as:
+     * - Bidding
+     * - In Progress
+     * - Completed
+     * Shows error message if project is not found.
+     * 
+     * @param scanner The scanner object to read user input
+     */
     private static void updateProjectStatus(Scanner scanner) {
         if (projectCount == 0) {
             System.out.println("\n➜ No projects available for status update.");
@@ -268,152 +323,15 @@ public class App {
     }
 
     /**
-     * Manages financial operations such as budgeting and cost control.
-     *
-     * @param scanner The scanner object to read user input.
-     */
-    private static void manageFinancialManagement(Scanner scanner) {
-        System.out.println("\n=== 3. Financial Management ===");
-        System.out.println("1. Budgeting");
-        System.out.println("2. Cost Control");
-        System.out.println("3. List Projects with Budget");
-        System.out.println("0. Return to Main Menu");
-        System.out.print("Enter your choice (1-3): ");
-        int choice;
-        // Attempt to read an integer from the user input
-        try {
-            choice = scanner.nextInt();
-            // Consume the newline character left in the buffer after reading an integer
-            scanner.nextLine();
-        } catch (InputMismatchException e) {
-            // If the input is not an integer, print an error message and exit the method
-            System.out.println("Invalid input! Please try again.");
-            return;
-        }
-        switch (choice) {
-            case 1:
-                setBudget(scanner);
-                break;
-            case 2:
-                controlCosts(scanner);
-                break;
-            case 3:
-                listProjectsWithBudget();
-                break;
-            case 0:
-                return;
-            default:
-                System.out.println("Invalid choice! Please try again.");
-                break;
-        }
-    }
-
-    private static void setBudget(Scanner scanner) {
-        System.out.println("\nBudgeting:");
-        System.out.println("List of Projects:");
-        for (int i = 0; i < projectCount; i++) {
-            double projectCost = Double.parseDouble(projects[i][4]);
-            int newBudget = (int) (projectCost * 0.6);
-            budgetData[i][0] = String.valueOf(newBudget); // Auto-add budget with 60% of project cost
-            System.out.println(
-                (i + 1) +
-                ". Project ID: " +
-                projects[i][3] +
-                ", Project Name: " +
-                projects[i][0] +
-                ", Budget: " +
-                String.format("%,d", Integer.parseInt(budgetData[i][0])) +
-                " THB"
-            );
-        }
-        System.out.print("Enter project ID to update budget: ");
-        int projectId = scanner.nextInt();
-        scanner.nextLine(); // Consume newline left-over
-        boolean projectFound = false;
-        for (int i = 0; i < projectCount; i++) {
-            if (Integer.parseInt(projects[i][3]) == projectId) {
-                // Calculate the budget at 60% of the project cost
-                double projectCost = Double.parseDouble(projects[i][4]);
-                double newBudget = projectCost * 0.6;
-                budgetData[i][0] = String.valueOf(newBudget); // Update budget in budget data array
-                projectFound = true;
-                System.out.println(
-                    "\nBudget updated successfully for project ID " +
-                    projectId +
-                    "!"
-                );
-                break;
-            }
-        }
-        if (!projectFound) {
-            System.out.println("\nProject not found. Please try again.");
-        }
-    }
-
-    // Calculate cost control at 80% of project cost
-    private static void controlCosts(Scanner scanner) {
-        System.out.println("\nCost Control:");
-        System.out.print("Enter project ID: ");
-        int projectId = scanner.nextInt();
-        scanner.nextLine(); // Consume newline left-over
-        boolean projectFound = false;
-        for (int i = 0; i < projectCount; i++) {
-            if (Integer.parseInt(projects[i][3]) == projectId) {
-                double projectCost = Double.parseDouble(projects[i][4]);
-                double costControl = projectCost * 0.8;
-                budgetData[i][1] = String.valueOf(costControl); // Update cost control in budget data array
-                projectFound = true;
-                System.out.println(
-                    "Cost control implemented successfully for project ID " +
-                    projectId +
-                    " (" +
-                    projects[i][0] +
-                    ") at 80% of project cost: " +
-                    String.format("%,.2f", costControl) +
-                    " THB"
-                );
-                break;
-            }
-        }
-        if (!projectFound) {
-            System.out.println("➜ Project not found. Please try again.");
-        }
-    }
-
-    private static void listProjectsWithBudget() {
-        boolean projectFound = false;
-        System.out.println("\nList of Projects with Budget: ");
-        if (!projectFound) {
-            System.out.println("➜ Project not found. Please try again.");
-        }
-        for (int i = 0; i < projectCount; i++) {
-            if (budgetData[i][0] != null) {
-                System.out.println(
-                    "Project ID: " +
-                    projects[i][3] +
-                    ", Project Name: " +
-                    projects[i][0] +
-                    ", Budget: " +
-                    String.format(
-                        "%,.2f",
-                        Double.parseDouble(budgetData[i][0])
-                    ) +
-                    " THB"
-                );
-            } else {
-                System.out.println(
-                    "Project ID: " +
-                    projects[i][3] +
-                    ", Project Name: " +
-                    projects[i][0] +
-                    ", Budget: N/A"
-                );
-            }
-        }
-    }
-
-    /**
-     * @param scanner
+     * Manages supply chain and inventory operations.
+     * 
+     * Provides options for:
+     * 1. Sourcing solar panels
+     * 2. Sourcing inverters
+     * 3. Managing inventory
+     * 0. Returning to main menu
+     * 
+     * @param scanner The scanner object to read user input
      */
     private static void manageSupplyChainInventory(Scanner scanner) {
         System.out.println("\n=== 2. Supply Chain, Inventory Management ===");
@@ -445,6 +363,16 @@ public class App {
         }
     }
 
+    /**
+     * Handles the sourcing of solar panels from suppliers.
+     * 
+     * Allows selection from available manufacturers:
+     * - LONGi
+     * - ZNSHINE
+     * Confirms successful sourcing from selected supplier.
+     * 
+     * @param scanner The scanner object to read user input
+     */
     private static void sourceSolarPanels(Scanner scanner) {
         System.out.println("\nSource Solar Panels:");
         System.out.println("Select supplier name for solar panels: ");
@@ -470,6 +398,14 @@ public class App {
         }
     }
 
+    /**
+     * Displays available inverter brands for sourcing.
+     * 
+     * Shows list of available inverter brands:
+     * - SMA
+     * - Huawei
+     * - Growatt
+     */
     private static void sourceInverters() {
         System.out.println("\nSource Inverters:");
 
@@ -480,6 +416,13 @@ public class App {
         }
     }
 
+    /**
+     * Displays current inventory levels for all products.
+     * 
+     * Shows stock levels for:
+     * - Inverter brands (SMA, Huawei, Growatt)
+     * - Solar panel manufacturers (LONGi, ZNSHINE)
+     */
     private static void manageInventory() {
         System.out.println("\nManage Inventory:");
 
@@ -499,6 +442,202 @@ public class App {
         }
     }
 
+    /**
+     * Manages financial operations and budgeting.
+     * 
+     * Provides options for:
+     * 1. Setting project budgets
+     * 2. Controlling costs
+     * 3. Listing projects with budgets
+     * 0. Returning to main menu
+     * 
+     * @param scanner The scanner object to read user input
+     */
+    private static void manageFinancialManagement(Scanner scanner) {
+        System.out.println("\n=== 3. Financial Management ===");
+        System.out.println("1. Budgeting");
+        System.out.println("2. Cost Control");
+        System.out.println("3. List Projects with Budget");
+        System.out.println("0. Return to Main Menu");
+        System.out.print("Enter your choice (1-3): ");
+        int choice;
+        // Attempt to read an integer from the user input
+        try {
+            choice = scanner.nextInt();
+            // Consume the newline character left in the buffer after reading an integer
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            // If the input is not an integer, print an error message and exit the method
+            System.out.println("Invalid input! Please try again.");
+            return;
+        }
+        switch (choice) {
+            case 1:
+                setBudget(scanner);
+                manageFinancialManagement(scanner);
+                break;
+            case 2:
+                controlCosts(scanner);
+                manageFinancialManagement(scanner);
+                break;
+            case 3:
+                listProjectsWithBudget();
+                manageFinancialManagement(scanner);
+                break;
+            case 0:
+                return;
+            default:
+                System.out.println("Invalid choice! Please try again.");
+                break;
+        }
+    }
+
+    /**
+     * Sets or updates project budgets.
+     * 
+     * Automatically calculates initial budget as 60% of project cost.
+     * Allows manual update to 80% of project cost.
+     * Shows error if project is not found.
+     * 
+     * @param scanner The scanner object to read user input
+     */
+    private static void setBudget(Scanner scanner) {
+        System.out.println("\nBudgeting:");
+        System.out.println("List of Projects:");
+        for (int i = 0; i < projectCount; i++) {
+            double projectCost = Double.parseDouble(projects[i][4]);
+            int newBudget = (int) (projectCost * 0.6);
+            budgetData[i][0] = String.valueOf(newBudget); // Auto-add budget with 60% of project cost
+            System.out.println(
+                "Project ID: " +
+                projects[i][3] +
+                ", Project Name: " +
+                projects[i][0] +
+                ", Budget: " +
+                String.format("%,d", Integer.parseInt(budgetData[i][0])) +
+                " THB"
+            );
+        }
+
+        System.out.println("\nList of Projects:");
+        for (int i = 0; i < projectCount; i++) {
+            System.out.println(
+                "Project ID: " +
+                projects[i][3] +
+                ", Project Name: " +
+                projects[i][0]
+            );
+        }
+
+        System.out.print("Enter project ID to update budget: ");
+        int projectId = scanner.nextInt();
+        scanner.nextLine();
+        boolean projectFound = false;
+        for (int i = 0; i < projectCount; i++) {
+            if (Integer.parseInt(projects[i][3]) == projectId) {
+                // Calculate the budget at 60% of the project cost
+                double projectCost = Double.parseDouble(projects[i][4]);
+                double newBudget = projectCost * 0.8;
+                budgetData[i][0] = String.valueOf(newBudget); // Update budget in budget data array
+                projectFound = true;
+                System.out.println(
+                    "\nBudget updated successfully for project ID " +
+                    projectId +
+                    "!"
+                );
+                break;
+            }
+        }
+        if (!projectFound) {
+            System.out.println("\nProject not found. Please try again.");
+        }
+    }
+
+    /**
+     * Implements cost control measures for projects.
+     * 
+     * Sets cost control limit at 80% of project cost.
+     * Updates cost control data in budget array.
+     * Shows error if project is not found.
+     * 
+     * @param scanner The scanner object to read user input
+     */
+    private static void controlCosts(Scanner scanner) {
+        System.out.println("\nCost Control:");
+        System.out.print("Enter project ID: ");
+        int projectId = scanner.nextInt();
+        scanner.nextLine(); // Consume newline left-over
+        boolean projectFound = false;
+        for (int i = 0; i < projectCount; i++) {
+            if (Integer.parseInt(projects[i][3]) == projectId) {
+                double projectCost = Double.parseDouble(projects[i][4]);
+                double costControl = projectCost * 0.8;
+                budgetData[i][1] = String.valueOf(costControl); // Update cost control in budget data array
+                projectFound = true;
+                System.out.println(
+                    "Cost control implemented successfully for project ID " +
+                    projectId +
+                    " (" +
+                    projects[i][0] +
+                    ") at 80% of project cost: " +
+                    String.format("%,.2f", costControl) +
+                    " THB"
+                );
+                break;
+            }
+        }
+        if (!projectFound) {
+            System.out.println("➜ Project not found. Please try again.");
+        }
+    }
+
+    /**
+     * Displays list of all projects with their budgets.
+     * 
+     * Shows for each project:
+     * - Project ID
+     * - Project name
+     * - Allocated budget in THB
+     * Displays 'N/A' for projects without budgets.
+     */
+    private static void listProjectsWithBudget() {
+        System.out.println("\nList of Projects with Budget: ");
+        for (int i = 0; i < projectCount; i++) {
+            if (budgetData[i][0] != null) {
+                System.out.println(
+                    "Project ID: " +
+                    projects[i][3] +
+                    ", Project Name: " +
+                    projects[i][0] +
+                    ", Budget: " +
+                    String.format(
+                        "%,.2f",
+                        Double.parseDouble(budgetData[i][0])
+                    ) +
+                    " THB"
+                );
+            } else {
+                System.out.println(
+                    "Project ID: " +
+                    projects[i][3] +
+                    ", Project Name: " +
+                    projects[i][0] +
+                    ", Budget: N/A"
+                );
+            }
+        }
+    }
+
+    /**
+     * Manages human resources operations.
+     * 
+     * Provides options for:
+     * 1. Recording employee information
+     * 2. Showing employee information
+     * 3. Returning to main menu
+     * 
+     * @param scanner The scanner object to read user input
+     */
     private static void manageHumanResources(Scanner scanner) {
         String[] options = {
             "Record Employee Information",
@@ -528,6 +667,18 @@ public class App {
         }
     }
 
+    /**
+     * Records new employee information.
+     * 
+     * Captures and stores:
+     * - Employee ID
+     * - Employee name
+     * - Employee role
+     * Confirms successful recording of information.
+     * 
+     * @param scanner The scanner object to read user input
+     * @param employeeInfo Array to store employee information
+     */
     private static void recordEmployeeInformation(
         Scanner scanner,
         String[] employeeInfo
@@ -548,6 +699,14 @@ public class App {
         );
     }
 
+    /**
+     * Displays information for all registered employees.
+     * 
+     * Shows for each employee:
+     * - Employee ID
+     * - Name
+     * - Role
+     */
     private static void showEmployeesInformation() {
         System.out.println("\nShow Employees Information:");
         for (int i = 0; i < employeeCount; i++) {
@@ -562,6 +721,16 @@ public class App {
         }
     }
 
+    /**
+     * Generates comprehensive system report.
+     * 
+     * Includes sections for:
+     * - Project status report
+     * - Budget report
+     * - Inventory report
+     * - Employee report
+     * Each section shows relevant details and current status.
+     */
     private static void generateReport() {
         System.out.println("*** ---------------------- ***\n");
 
