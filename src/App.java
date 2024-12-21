@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 /**
  * Main class for the Construction Engineering ERP Software.
- * 
+ *
  * Handles user authentication, main menu navigation, and various operations
  * for project management, supply chain and inventory management, financial
  * management, human resource management, and report generation.
@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class App {
 
     private static final String[][] CORRECT_CREDENTIALS = {
-        { "admin", "admin" }
+        { "admin", "admin" },
     };
 
     // Arrays to store project, supplier, purchase order, and employee data
@@ -23,7 +23,7 @@ public class App {
 
     /**
      * Authenticates the user with 3 attempts.
-     * 
+     *
      * @param scanner The scanner object to read user input.
      * @return true if login is successful, false if login fails.
      */
@@ -61,7 +61,7 @@ public class App {
 
     /**
      * Displays the main menu of the Construction Engineering ERP Software.
-     * 
+     *
      * Shows a menu with options for:
      * 1. Project Management
      * 2. Supply Chain & Inventory Management
@@ -94,10 +94,10 @@ public class App {
 
     /**
      * Main entry point of the application.
-     * 
+     *
      * Handles user authentication and main menu navigation.
      * Continues to display menu and process user choices until exit is selected.
-     * 
+     *
      * @param args Command line arguments (not used)
      * @throws Exception If an error occurs during program execution
      */
@@ -149,13 +149,13 @@ public class App {
 
     /**
      * Manages project-related operations.
-     * 
+     *
      * Provides a submenu for:
      * 1. Adding new projects
      * 2. Listing existing projects
      * 3. Updating project status
      * 0. Returning to main menu
-     * 
+     *
      * @param scanner The scanner object to read user input
      */
     private static void manageProject(Scanner scanner) {
@@ -197,7 +197,7 @@ public class App {
      * Increases the project cost by 20% and adds 7% VAT.
      * Stores the project information in the projects array and increments the project count.
      * Prints a success message after adding the project successfully.
-     * 
+     *
      * @param scanner The scanner object to read user input
      */
     private static void addProject(Scanner scanner) {
@@ -226,13 +226,17 @@ public class App {
         projects[projectCount][4] = String.valueOf(projectCost);
         projectCount++;
         System.out.println(
-            "\n** Project : " + projectName + " | Project ID: " + projectId + " | , added successfully!"
+            "\n** Project : " +
+            projectName +
+            " | Project ID: " +
+            projectId +
+            " | , added successfully!"
         );
     }
 
     /**
      * Lists all registered projects with their details.
-     * 
+     *
      * Displays project information including:
      * - Project number
      * - Project name
@@ -241,7 +245,7 @@ public class App {
      * - End date
      * - Project cost
      * - Current status
-     * 
+     *
      * @param scanner The scanner object to read user input
      */
     private static void listProjects(Scanner scanner) {
@@ -272,13 +276,13 @@ public class App {
 
     /**
      * Updates the status of an existing project.
-     * 
+     *
      * Allows updating project status to values such as:
      * - Bidding
      * - In Progress
      * - Completed
      * Shows error message if project is not found.
-     * 
+     *
      * @param scanner The scanner object to read user input
      */
     private static void updateProjectStatus(Scanner scanner) {
@@ -324,13 +328,13 @@ public class App {
 
     /**
      * Manages supply chain and inventory operations.
-     * 
+     *
      * Provides options for:
      * 1. Sourcing solar panels
      * 2. Sourcing inverters
      * 3. Managing inventory
      * 0. Returning to main menu
-     * 
+     *
      * @param scanner The scanner object to read user input
      */
     private static void manageSupplyChainInventory(Scanner scanner) {
@@ -365,12 +369,12 @@ public class App {
 
     /**
      * Handles the sourcing of solar panels from suppliers.
-     * 
+     *
      * Allows selection from available manufacturers:
      * - LONGi
      * - ZNSHINE
      * Confirms successful sourcing from selected supplier.
-     * 
+     *
      * @param scanner The scanner object to read user input
      */
     private static void sourceSolarPanels(Scanner scanner) {
@@ -400,7 +404,7 @@ public class App {
 
     /**
      * Displays available inverter brands for sourcing.
-     * 
+     *
      * Shows list of available inverter brands:
      * - SMA
      * - Huawei
@@ -418,7 +422,7 @@ public class App {
 
     /**
      * Displays current inventory levels for all products.
-     * 
+     *
      * Shows stock levels for:
      * - Inverter brands (SMA, Huawei, Growatt)
      * - Solar panel manufacturers (LONGi, ZNSHINE)
@@ -431,26 +435,38 @@ public class App {
         String[] inverterBrands = { "SMA", "Huawei", "Growatt" };
         int[] inverterStock = { 15, 20, 10 }; // Stock numbers for each inverter brand
         for (int i = 0; i < inverterBrands.length; i++) {
-            System.out.println("- " + inverterBrands[i] + " (Stock: " + inverterStock[i] + " units)");
+            System.out.println(
+                "- " +
+                inverterBrands[i] +
+                " (Stock: " +
+                inverterStock[i] +
+                " units)"
+            );
         }
 
         System.out.println("\nSolar Panel Manufacturers:");
         String[] solarPanelManufacturers = { "LONGi", "ZNSHINE" };
         int[] solarPanelStock = { 100, 75 }; // Stock numbers for each manufacturer
         for (int i = 0; i < solarPanelManufacturers.length; i++) {
-            System.out.println("- " + solarPanelManufacturers[i] + " (Stock: " + solarPanelStock[i] + " units)");
+            System.out.println(
+                "- " +
+                solarPanelManufacturers[i] +
+                " (Stock: " +
+                solarPanelStock[i] +
+                " units)"
+            );
         }
     }
 
     /**
      * Manages financial operations and budgeting.
-     * 
+     *
      * Provides options for:
      * 1. Setting project budgets
      * 2. Controlling costs
      * 3. Listing projects with budgets
      * 0. Returning to main menu
-     * 
+     *
      * @param scanner The scanner object to read user input
      */
     private static void manageFinancialManagement(Scanner scanner) {
@@ -494,11 +510,11 @@ public class App {
 
     /**
      * Sets or updates project budgets.
-     * 
+     *
      * Automatically calculates initial budget as 60% of project cost.
      * Allows manual update to 80% of project cost.
      * Shows error if project is not found.
-     * 
+     *
      * @param scanner The scanner object to read user input
      */
     private static void setBudget(Scanner scanner) {
@@ -555,11 +571,11 @@ public class App {
 
     /**
      * Implements cost control measures for projects.
-     * 
+     *
      * Sets cost control limit at 80% of project cost.
      * Updates cost control data in budget array.
      * Shows error if project is not found.
-     * 
+     *
      * @param scanner The scanner object to read user input
      */
     private static void controlCosts(Scanner scanner) {
@@ -593,7 +609,7 @@ public class App {
 
     /**
      * Displays list of all projects with their budgets.
-     * 
+     *
      * Shows for each project:
      * - Project ID
      * - Project name
@@ -630,19 +646,19 @@ public class App {
 
     /**
      * Manages human resources operations.
-     * 
+     *
      * Provides options for:
      * 1. Recording employee information
      * 2. Showing employee information
      * 3. Returning to main menu
-     * 
+     *
      * @param scanner The scanner object to read user input
      */
     private static void manageHumanResources(Scanner scanner) {
         String[] options = {
             "Record Employee Information",
             "Show Employees Information",
-            "Return to Main Menu"
+            "Return to Main Menu",
         };
         String[] employeeInfo = new String[3];
         System.out.println("\n=== 4. Human Resource Management ===");
@@ -669,13 +685,13 @@ public class App {
 
     /**
      * Records new employee information.
-     * 
+     *
      * Captures and stores:
      * - Employee ID
      * - Employee name
      * - Employee role
      * Confirms successful recording of information.
-     * 
+     *
      * @param scanner The scanner object to read user input
      * @param employeeInfo Array to store employee information
      */
@@ -701,7 +717,7 @@ public class App {
 
     /**
      * Displays information for all registered employees.
-     * 
+     *
      * Shows for each employee:
      * - Employee ID
      * - Name
@@ -723,7 +739,7 @@ public class App {
 
     /**
      * Generates comprehensive system report.
-     * 
+     *
      * Includes sections for:
      * - Project status report
      * - Budget report
